@@ -12,12 +12,6 @@ import static ru.alphant.Parser.parse;
 public class ApplicationTests {
 
     @Test
-    public void testImportJunit(){
-        assertEquals(true,true);
-    }
-
-
-    @Test
     public void parseValidTests(){
         Map<String, Expression> testKit = new HashMap<>();
         // Valid to parse
