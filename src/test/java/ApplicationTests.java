@@ -6,16 +6,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ru.alphant.Calculator.calculate;
+import static ru.alphant.Main.calc;
 import static ru.alphant.Parser.parse;
 
 public class ApplicationTests {
 
     @Test
-    public void parseValidTests(){
+    public void parseValidTests() {
         Map<String, Expression> testKit = new HashMap<>();
         // Valid to parse
-        testKit.put("1+2", new Expression(false,1, "+", 2));
+        testKit.put("1+2", new Expression(false, 1, "+", 2));
         testKit.put("2 - 3", new Expression(false, 2, "-", 3));
         testKit.put("10 *8", new Expression(false, 10, "*", 8));
         testKit.put("IV +I", new Expression(true, 4, "+", 1));
@@ -26,7 +26,7 @@ public class ApplicationTests {
     }
 
     @Test
-    public void parseExceptionsTest(){
+    public void parseExceptionsTest() {
         Map<String, String> testKit = new HashMap<>();
         // Invalid to parse
         testKit.put("Exit", "Not valid expression [Exit]");
@@ -52,35 +52,35 @@ public class ApplicationTests {
     }
 
     @Test
-    public void calculateDivisionByZeroExceptionTest(){
-        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> calculate(
-                new Expression(false, 10, "/", 0))
-        );
-        Assertions.assertEquals("Division by zero", thrown.getMessage());
+    public void calculateDivisionByZeroExceptionTest() {
+        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> calc("10/0"));
+        Assertions.assertEquals("/ by zero", thrown.getMessage());
     }
 
     @Test
-    public void negativeRomanResulException(){
-        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> calculate(
-                new Expression(true, 4, "-", 5))
-        );
-        Assertions.assertEquals("Can't represent a negative number in roman numerals", thrown.getMessage());
+    public void negativeRomanResulException() {
+        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> calc("IV-V"));
+        Assertions.assertEquals("Can't represent a negative number or zero in roman numerals", thrown.getMessage());
     }
 
     @Test
-    public void validCalculationTests(){
-        Assertions.assertEquals("10", calculate(parse("6+4")));
-        Assertions.assertEquals("4", calculate(parse("6- 2")));
-        Assertions.assertEquals("24", calculate(parse("6 *4")));
-        Assertions.assertEquals("3", calculate(parse("6 / 2")));
-        Assertions.assertEquals("X", calculate(parse("VI+IV")));
-        Assertions.assertEquals("C", calculate(parse("X*X")));
-        Assertions.assertEquals("VIII", calculate(parse("X - II")));
-        Assertions.assertEquals("V", calculate(parse("X/II")));
-        Assertions.assertEquals("-5", calculate(parse("5-10")));
-        Assertions.assertEquals("1.5", calculate(parse("3/2")));
-        Assertions.assertEquals("I and VI ounce.", calculate(parse("VI/IV")));
-        Assertions.assertEquals("VIII ounce.", calculate(parse("IV/VI")));
+    public void ounceRomainResultException() {
+        RuntimeException thrown = Assertions.assertThrows(RuntimeException.class, () -> calc("IV / VI"));
+        Assertions.assertEquals("Can't represent a negative number or zero in roman numerals", thrown.getMessage());
     }
 
+    @Test
+    public void validCalculationTests() {
+        Assertions.assertEquals("10", calc("6+4"));
+        Assertions.assertEquals("4", calc("6- 2"));
+        Assertions.assertEquals("24", calc("6 *4"));
+        Assertions.assertEquals("3", calc("6 / 2"));
+        Assertions.assertEquals("X", calc("VI+IV"));
+        Assertions.assertEquals("C", calc("X*X"));
+        Assertions.assertEquals("VIII", calc("X - II"));
+        Assertions.assertEquals("V", calc("X/II"));
+        Assertions.assertEquals("-5", calc("5-10"));
+        Assertions.assertEquals("1", calc("3/2"));
+        Assertions.assertEquals("I", calc("VI/IV"));
+    }
 }
